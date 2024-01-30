@@ -1,4 +1,4 @@
-package com.example.springbootapp.dto;
+package com.example.springbootapp.entity;
 
 public enum JobTitle {
     MANAGER,

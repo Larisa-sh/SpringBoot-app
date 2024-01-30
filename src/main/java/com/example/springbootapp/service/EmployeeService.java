@@ -1,11 +1,12 @@
 package com.example.springbootapp.service;
 
-import com.example.springbootapp.dto.Employee;
+import com.example.springbootapp.entity.Employee;
 import com.example.springbootapp.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ public class EmployeeService {
     }
     @Transactional
     public Employee saveNewEmployee(Employee employee) {
+        employee.setCreatedAt(LocalDateTime.now());
         return employeeRepository.save(employee);
     }
 
