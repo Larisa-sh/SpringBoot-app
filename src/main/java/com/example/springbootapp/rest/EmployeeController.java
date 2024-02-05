@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
-    private final EmployeeMapper employeeMapper = EmployeeMapper.INSTANCE;
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
@@ -25,27 +23,22 @@ public class EmployeeController {
 
     @GetMapping
     public List<EmployeeDTO> getAllEmployees(){
-        return employeeService.showAllEmployees().stream().map(employeeMapper::employeeToEmployeeDTO).collect(Collectors.toList());
+        return employeeService.showAllEmployees();
     }
 
     @GetMapping("/{employeeId}")
     public EmployeeDTO getOneEmployee(@PathVariable("employeeId") long employeeId){
-
-        return EmployeeMapper.INSTANCE.employeeToEmployeeDTO(employeeService.showEmployeeById(employeeId));
+        return employeeService.showEmployeeById(employeeId);
     }
 
     @PostMapping
     public Employee saveNewEmployee(@RequestBody EmployeeDTO employeeDTO){
-        return employeeService.saveNewEmployee(EmployeeMapper.INSTANCE.employeeDTOtoEmployee(employeeDTO));
+        return employeeService.saveNewEmployee(employeeDTO);
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO){
-        Employee employee = employeeService.showEmployeeById(employeeId);
-        LocalDateTime updatedDateTime = employee.getCreatedAt();
-        employee = employeeMapper.employeeDTOtoEmployee(employeeDTO);
-        employee.setCreatedAt(updatedDateTime);
-        return employeeService.updateEmployee(employeeId, employee);
+    public Employee updateEmployee(@PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO){;
+        return employeeService.updateEmployee(employeeId, employeeDTO);
     }
 
     @DeleteMapping("/{employeeId}")

@@ -1,7 +1,7 @@
 package com.example.springbootapp.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -40,10 +40,13 @@ public class Employee {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public Employee() {
     }
 
-    public Employee(Long employeeId, String firstName, String lastName, int departmentId, JobTitle jobTitle, Gender gender, Date dateOfBirth, LocalDateTime createdAt) {
+    public Employee(Long employeeId, String firstName, String lastName, int departmentId, JobTitle jobTitle, Gender gender, Date dateOfBirth, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,6 +55,7 @@ public class Employee {
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getEmployeeId() {
@@ -118,21 +122,25 @@ public class Employee {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Employee employee = (Employee) o;
-        return getEmployeeId() != null && Objects.equals(employeeId, employee.employeeId) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && jobTitle == employee.jobTitle && gender == employee.gender && Objects.equals(dateOfBirth, employee.dateOfBirth) && Objects.equals(createdAt, employee.createdAt);
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Employee employee = (Employee) o;
+        return employeeId != null && Objects.equals(employeeId, employee.employeeId);
     }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }
