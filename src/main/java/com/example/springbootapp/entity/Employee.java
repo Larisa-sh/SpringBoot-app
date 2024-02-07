@@ -1,15 +1,19 @@
-package com.example.springbootapp.dto;
+package com.example.springbootapp.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "employee")
 public class Employee {
+
     @Id
     @Column(name = "employee_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
 
     @Column(name = "first_name")
@@ -29,14 +33,20 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "date_of_birth")
+    @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public Employee() {
     }
 
-    public Employee(Long employeeId, String firstName, String lastName, int departmentId, JobTitle jobTitle, Gender gender, Date dateOfBirth) {
+    public Employee(Long employeeId, String firstName, String lastName, int departmentId, JobTitle jobTitle, Gender gender, Date dateOfBirth, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,6 +54,8 @@ public class Employee {
         this.jobTitle = jobTitle;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getEmployeeId() {
@@ -102,22 +114,33 @@ public class Employee {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Employee)) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Employee employee = (Employee) o;
-        return departmentId == employee.departmentId &&
-                Objects.equals(employeeId, employee.employeeId) &&
-                Objects.equals(firstName, employee.firstName) &&
-                Objects.equals(lastName, employee.lastName) &&
-                jobTitle == employee.jobTitle &&
-                gender == employee.gender &&
-                Objects.equals(dateOfBirth, employee.dateOfBirth);
+        return employeeId != null && Objects.equals(employeeId, employee.employeeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId, firstName, lastName, departmentId, jobTitle, gender, dateOfBirth);
+        return getClass().hashCode();
     }
+
 }
