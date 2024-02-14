@@ -11,5 +11,15 @@ public record EmployeeDTO (Long employeeId,
                            int departmentId,
                            JobTitle jobTitle,
                            Gender gender,
-                           Date dateOfBirth){}
+                           Date dateOfBirth){
+
+    public boolean isAtLeastOneParamNull(EmployeeDTO employeeDTO){
+        return  employeeDTO.firstName == null  |
+                employeeDTO.lastName == null |
+                employeeDTO.departmentId == 0 |
+                employeeDTO.jobTitle == null |
+                employeeDTO.gender == null |
+                employeeDTO.dateOfBirth == null;
+    }
+}
 

@@ -142,5 +142,4 @@ public class Employee {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

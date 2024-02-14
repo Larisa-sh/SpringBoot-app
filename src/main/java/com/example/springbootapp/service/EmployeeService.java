@@ -2,6 +2,8 @@ package com.example.springbootapp.service;
 
 import com.example.springbootapp.dto.EmployeeDTO;
 import com.example.springbootapp.entity.Employee;
+import com.example.springbootapp.exception.EmployeeNotFoundException;
+import com.example.springbootapp.exception.EmployeeNotSavedException;
 import com.example.springbootapp.mapper.EmployeeMapper;
 import com.example.springbootapp.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +26,30 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
-    public List<EmployeeDTO> showAllEmployees() {
+    public List<EmployeeDTO> getAllEmployees() {
 
         return employeeRepository.findAll().stream().map(employeeMapper::employeeToEmployeeDTO).collect(Collectors.toList());
     }
 
-    public EmployeeDTO showEmployeeById(long id) {
-        Optional<Employee> foundEmployee = employeeRepository.findById(id);
-        return employeeMapper.employeeToEmployeeDTO(foundEmployee.get());
+    public EmployeeDTO getEmployeeById(long id){
+        Employee employee = employeeRepository.findById(id).orElseThrow(()-> new EmployeeNotFoundException("Employee with id " + id + " doesn't exist"));
+        return employeeMapper.employeeToEmployeeDTO(employee);
     }
+
     @Transactional
     public Employee saveNewEmployee(EmployeeDTO employeeDTO) {
+        if (employeeDTO.isAtLeastOneParamNull(employeeDTO)){
+            throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
+        }
         return employeeRepository.save(employeeMapper.employeeDTOtoEmployee(employeeDTO));
     }
 
     @Transactional
     public Employee updateEmployee(long employeeId, EmployeeDTO updatedEmployeeDTO) {
-        Employee employee = employeeRepository.findById(employeeId).get();
+        if (updatedEmployeeDTO.isAtLeastOneParamNull(updatedEmployeeDTO)){
+            throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
+        }
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee with id " + employeeId + " doesn't exist"));
         employeeMapper.updateEmployeeFromDto(updatedEmployeeDTO, employee);
         employee.setEmployeeId(employeeId);
         return employeeRepository.save(employee);
