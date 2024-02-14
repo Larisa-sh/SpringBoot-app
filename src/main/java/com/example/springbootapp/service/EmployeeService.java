@@ -31,9 +31,9 @@ public class EmployeeService {
         return employeeRepository.findAll().stream().map(employeeMapper::employeeToEmployeeDTO).collect(Collectors.toList());
     }
 
-    public EmployeeDTO getEmployeeById(long id) {
-        Optional<Employee> foundEmployee = employeeRepository.findById(id);
-        return employeeMapper.employeeToEmployeeDTO(foundEmployee.orElseThrow(()-> new EmployeeNotFoundException("Employee with id " + id + " doesn't exist")));
+    public EmployeeDTO getEmployeeById(long id){
+        Employee employee = employeeRepository.findById(id).orElseThrow(()-> new EmployeeNotFoundException("Employee with id " + id + " doesn't exist"));
+        return employeeMapper.employeeToEmployeeDTO(employee);
     }
 
     @Transactional
@@ -46,10 +46,10 @@ public class EmployeeService {
 
     @Transactional
     public Employee updateEmployee(long employeeId, EmployeeDTO updatedEmployeeDTO) {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee with id " + employeeId + " doesn't exist"));
         if (updatedEmployeeDTO.isAtLeastOneParamNull(updatedEmployeeDTO)){
             throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
         }
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(()-> new EmployeeNotFoundException("Employee with id " + employeeId + " doesn't exist"));
         employeeMapper.updateEmployeeFromDto(updatedEmployeeDTO, employee);
         employee.setEmployeeId(employeeId);
         return employeeRepository.save(employee);
