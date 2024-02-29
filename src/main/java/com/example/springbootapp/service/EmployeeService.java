@@ -29,7 +29,8 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> getAllEmployees() {
-        return employeeRepository.findAll().stream().map(employeeMapper::employeeToEmployeeDTO).collect(Collectors.toList());
+        return employeeRepository.findAll().stream()
+                .map(employeeMapper::employeeToEmployeeDTO).collect(Collectors.toList());
     }
 
     public EmployeeDTO getEmployeeById(long id) {
@@ -43,8 +44,9 @@ public class EmployeeService {
         if (employeeDTO.isAtLeastOneParamNull(employeeDTO)) {
             throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
         }
-        Optional<Employee> employee = employeeRepository.findByLastNameAndFirstName(employeeDTO.lastName(), employeeDTO.firstName());
-        if (employee.isEmpty()) {
+        Optional<Employee> employee = employeeRepository
+                .findByLastNameAndFirstName(employeeDTO.lastName(), employeeDTO.firstName());
+        if (employee.isPresent()) {
             throw new EmployeeNotUniqueException("Employee already exists");
         }
         return employeeRepository.save(employeeMapper.employeeDTOtoEmployee(employeeDTO));
@@ -55,19 +57,17 @@ public class EmployeeService {
         if (updatedEmployeeDTO.isAtLeastOneParamNull(updatedEmployeeDTO)) {
             throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
         }
-        Optional<Employee> maybeExistsEmployee = employeeRepository
-                .findByLastNameAndFirstName(updatedEmployeeDTO.lastName(), updatedEmployeeDTO.firstName());
-        if (maybeExistsEmployee.isEmpty()) {
-            throw new EmployeeNotUniqueException("You can't update employee because "
-                    + updatedEmployeeDTO.firstName() + " " + updatedEmployeeDTO.lastName()
-                    + " already exists");
-        }
-
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee with id " + employeeId + " doesn't exist"));
-        employeeMapper.updateEmployeeFromDto(updatedEmployeeDTO, employee);
-        employee.setEmployeeId(employeeId);
-        return employeeRepository.save(employee);
+
+        if (employee.getFirstName().equals(updatedEmployeeDTO.firstName())
+                & employee.getLastName().equals(updatedEmployeeDTO.lastName())){
+            employeeMapper.updateEmployeeFromDto(updatedEmployeeDTO, employee);
+            employee.setEmployeeId(employeeId);
+        } else {
+            throw new EmployeeNotSavedException("Employee not saved because first and last name must be equal");
+        }
+        return employee;
     }
 
     @Transactional

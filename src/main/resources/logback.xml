@@ -1,0 +1,31 @@
+<configuration>
+
+    <property name="maxMessageLength" value="8192" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %level %logger{36}     : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Request and Response Logging -->
+    <logger name="org.springframework.web" level="DEBUG" additivity="false">
+        <appender-ref ref="REQUEST_RESPONSE_FILE" />
+    </logger>
+
+    <appender name="REQUEST_RESPONSE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/request-response.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %level --- [%thread] %logger{35} : %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/request-response-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
