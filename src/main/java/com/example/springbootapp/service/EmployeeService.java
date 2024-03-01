@@ -61,11 +61,12 @@ public class EmployeeService {
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee with id " + employeeId + " doesn't exist"));
 
         if (employee.getFirstName().equals(updatedEmployeeDTO.firstName())
-                & employee.getLastName().equals(updatedEmployeeDTO.lastName())){
+                & employee.getLastName().equals(updatedEmployeeDTO.lastName())) {
             employeeMapper.updateEmployeeFromDto(updatedEmployeeDTO, employee);
             employee.setEmployeeId(employeeId);
         } else {
-            throw new EmployeeNotSavedException("Employee not saved because first and last name must be equal");
+            throw new EmployeeNotSavedException("To update employee with id: "
+                    + employeeId + " you must provide the same first and last name as this employee has");
         }
         return employee;
     }
