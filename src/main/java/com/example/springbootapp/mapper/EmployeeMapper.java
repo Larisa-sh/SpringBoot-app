@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 
 import java.time.LocalDate;
 
-@Mapper(componentModel = "spring",imports= {LocalDate.class})
+@Mapper(componentModel = "spring", imports = {LocalDate.class})
 public interface EmployeeMapper {
 
     EmployeeDTO employeeToEmployeeDTO(Employee employee);

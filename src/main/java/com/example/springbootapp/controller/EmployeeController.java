@@ -1,4 +1,4 @@
-package com.example.springbootapp.rest;
+package com.example.springbootapp.controller;
 
 
 import com.example.springbootapp.dto.EmployeeDTO;
@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
+
     private final EmployeeService employeeService;
 
     @Autowired
@@ -20,27 +21,27 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmployeeDTO> getAllEmployees(){
+    public List<EmployeeDTO> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
     @GetMapping("/{employeeId}")
-    public EmployeeDTO getById(@PathVariable("employeeId") long employeeId){
+    public EmployeeDTO getById(@PathVariable("employeeId") long employeeId) {
         return employeeService.getEmployeeById(employeeId);
     }
 
     @PostMapping
-    public Employee saveNewEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public Employee saveNewEmployee(@RequestBody EmployeeDTO employeeDTO) {
         return employeeService.saveNewEmployee(employeeDTO);
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO){
+    public Employee updateEmployee(@PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO) {
         return employeeService.updateEmployee(employeeId, employeeDTO);
     }
 
     @DeleteMapping("/{employeeId}")
-    public void deleteEmployee(@PathVariable("employeeId") long employeeId){
+    public void deleteEmployee(@PathVariable("employeeId") long employeeId) {
         employeeService.deleteEmployee(employeeId);
     }
 }
