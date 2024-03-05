@@ -4,6 +4,7 @@ package com.example.springbootapp.controller;
 import com.example.springbootapp.dto.EmployeeDTO;
 import com.example.springbootapp.entity.Employee;
 import com.example.springbootapp.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,12 +32,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Employee saveNewEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public Employee saveNewEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
         return employeeService.saveNewEmployee(employeeDTO);
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO) {
+    public Employee updateEmployee(@Valid @PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO) {
         return employeeService.updateEmployee(employeeId, employeeDTO);
     }
 
