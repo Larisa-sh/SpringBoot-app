@@ -40,7 +40,7 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Employee saveNewEmployee(EmployeeDTO employeeDTO) {
+    public EmployeeDTO saveNewEmployee(EmployeeDTO employeeDTO) {
         if (employeeDTO.isAtLeastOneParamNull(employeeDTO)) {
             throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
         }
@@ -49,11 +49,12 @@ public class EmployeeService {
         if (employee.isPresent()) {
             throw new EmployeeNotUniqueException("Employee already exists");
         }
-        return employeeRepository.save(employeeMapper.employeeDTOtoEmployee(employeeDTO));
+        employeeRepository.save(employeeMapper.employeeDTOtoEmployee(employeeDTO));
+        return employeeDTO;
     }
 
     @Transactional
-    public Employee updateEmployee(long employeeId, EmployeeDTO updatedEmployeeDTO) {
+    public EmployeeDTO updateEmployee(long employeeId, EmployeeDTO updatedEmployeeDTO) {
         if (updatedEmployeeDTO.isAtLeastOneParamNull(updatedEmployeeDTO)) {
             throw new EmployeeNotSavedException("Employee not saved because at least one field is null");
         }
@@ -68,7 +69,7 @@ public class EmployeeService {
             throw new EmployeeNotSavedException("To update employee with id: "
                     + employeeId + " you must provide the same first and last name as this employee has");
         }
-        return employee;
+        return updatedEmployeeDTO;
     }
 
     @Transactional
