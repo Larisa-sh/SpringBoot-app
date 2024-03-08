@@ -2,7 +2,6 @@ package com.example.springbootapp.controller;
 
 
 import com.example.springbootapp.dto.EmployeeDTO;
-import com.example.springbootapp.entity.Employee;
 import com.example.springbootapp.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,7 +32,7 @@ public class EmployeeController {
     @GetMapping("/{employeeId}")
     @Operation(summary = "Shows an employee by their ID")
     public EmployeeDTO getById(@PathVariable("employeeId")
-                               @Parameter(description = "Employee's ID") long employeeId) {
+                               @Parameter(description = "Employee's ID", required = true) long employeeId) {
         return employeeService.getEmployeeById(employeeId);
     }
 
@@ -57,7 +56,7 @@ public class EmployeeController {
     @DeleteMapping("/{employeeId}")
     @Operation(summary = "Deletes an employee by their ID")
     public void deleteEmployee(@PathVariable("employeeId")
-                               @Parameter(description = "Employee's ID") long employeeId) {
+                               @Parameter(description = "Employee's ID", required = true) long employeeId) {
         employeeService.deleteEmployee(employeeId);
     }
 }
