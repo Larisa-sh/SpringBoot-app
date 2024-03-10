@@ -42,7 +42,7 @@ public class EmployeeExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse onConstraintValidationException(
+    public ValidationResponseError onConstraintValidationException(
             ConstraintViolationException exception
     ) {
         LOGGER.error(exception.getMessage(), exception);
@@ -54,20 +54,20 @@ public class EmployeeExceptionHandler {
                         )
                 )
                 .collect(Collectors.toList());
-        return new ValidationErrorResponse(violations);
+        return new ValidationResponseError(HttpStatus.BAD_REQUEST,violations);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ValidationErrorResponse onMethodArgumentNotValidException(
+    public ValidationResponseError onMethodArgumentNotValidException(
             MethodArgumentNotValidException exception
     ) {
         LOGGER.error(exception.getMessage(), exception);
         final List<Violation> violations = exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
-        return new ValidationErrorResponse(violations);
+        return new ValidationResponseError(HttpStatus.BAD_REQUEST, violations);
     }
 
     @ExceptionHandler

@@ -5,11 +5,14 @@ import com.example.springbootapp.dto.EmployeeDTO;
 import com.example.springbootapp.entity.Employee;
 import com.example.springbootapp.service.EmployeeService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -27,7 +30,10 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public EmployeeDTO getById(@PathVariable("employeeId") long employeeId) {
+    public EmployeeDTO getById(@PathVariable("employeeId")
+                               @Min(value = 1,
+                                       message = "Employee ID can't be less than 1")
+                               long employeeId) {
         return employeeService.getEmployeeById(employeeId);
     }
 
@@ -37,12 +43,21 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@Valid @PathVariable("employeeId") long employeeId, @RequestBody EmployeeDTO employeeDTO) {
+    public Employee updateEmployee(@PathVariable("employeeId")
+                                   @Min(value = 1,
+                                           message = "Employee ID can't be less than 1")
+                                   long employeeId,
+                                   @Valid
+                                   @RequestBody
+                                   EmployeeDTO employeeDTO) {
         return employeeService.updateEmployee(employeeId, employeeDTO);
     }
 
     @DeleteMapping("/{employeeId}")
-    public void deleteEmployee(@PathVariable("employeeId") long employeeId) {
+    public void deleteEmployee(@PathVariable("employeeId")
+                               @Min(value = 1,
+                                       message = "Employee ID can't be less than 1")
+                               long employeeId) {
         employeeService.deleteEmployee(employeeId);
     }
 }
