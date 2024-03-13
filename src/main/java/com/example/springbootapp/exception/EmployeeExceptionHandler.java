@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class EmployeeExceptionHandler {
@@ -42,32 +41,39 @@ public class EmployeeExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationResponseError onConstraintValidationException(
+    public ResponseError employeeConstraintViolation(
             ConstraintViolationException exception
     ) {
+        final List<Violation> violations = extractConstraintViolations(exception);
+        return new ResponseError(HttpStatus.BAD_REQUEST, violations.toString());
+    }
+
+    private List<Violation> extractConstraintViolations(ConstraintViolationException exception) {
         LOGGER.error(exception.getMessage(), exception);
-        final List<Violation> violations = exception.getConstraintViolations().stream()
-                .map(
-                        violation -> new Violation(
-                                violation.getPropertyPath().toString(),
-                                violation.getMessage()
-                        )
-                )
-                .collect(Collectors.toList());
-        return new ValidationResponseError(HttpStatus.BAD_REQUEST,violations);
+        return exception.getConstraintViolations().stream()
+                .map(violation -> new Violation(
+                        violation.getPropertyPath().toString(),
+                        violation.getMessage()))
+                .toList();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ValidationResponseError onMethodArgumentNotValidException(
+    public ResponseError employeeMethodArgumentNotValid(
             MethodArgumentNotValidException exception
     ) {
+        final List<Violation> violations = extractFieldErrors(exception);
+        return new ResponseError(HttpStatus.BAD_REQUEST, violations.toString());
+    }
+
+    private List<Violation> extractFieldErrors(MethodArgumentNotValidException exception) {
         LOGGER.error(exception.getMessage(), exception);
-        final List<Violation> violations = exception.getBindingResult().getFieldErrors().stream()
-                .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
-                .collect(Collectors.toList());
-        return new ValidationResponseError(HttpStatus.BAD_REQUEST, violations);
+        return exception.getBindingResult().getFieldErrors().stream()
+                .map(error -> new Violation(
+                        error.getField(),
+                        error.getDefaultMessage()))
+                .toList();
     }
 
     @ExceptionHandler

@@ -7,12 +7,10 @@ import com.example.springbootapp.service.EmployeeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Validated
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -44,8 +42,6 @@ public class EmployeeController {
 
     @PutMapping("/{employeeId}")
     public Employee updateEmployee(@PathVariable("employeeId")
-                                   @Min(value = 1,
-                                           message = "Employee ID can't be less than 1")
                                    long employeeId,
                                    @Valid
                                    @RequestBody
