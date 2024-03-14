@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final MessageProducer messageProducer;
 
-    public MessageController(MessageProducer messageProducer) {this.messageProducer = messageProducer;}
+    public MessageController(MessageProducer messageProducer) {
+        this.messageProducer = messageProducer;
+    }
 
     @PostMapping("/publish-message")
-    public ResponseEntity<String> publishMessage(@RequestBody String messageText){
+    public ResponseEntity<String> publishMessage(@RequestBody String messageText) {
 
         Message message = new Message(messageText);
         try {
