@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final MessageProducer messageProducer;
 
-    public MessageController(MessageProducer messageProducer) {
-        this.messageProducer = messageProducer;
-    }
+    public MessageController(MessageProducer messageProducer) {this.messageProducer = messageProducer;}
 
     @PostMapping("/publish-message")
-    public ResponseEntity<String> publishMessage(@RequestBody String messageText) {
+    public ResponseEntity<String> publishMessage(@RequestBody String messageText){
+
+        Message message = new Message(messageText);
         try {
-            messageProducer.sendMessageToTopic(messageText);
+            messageProducer.sendMessage(message);
             return new ResponseEntity<>("Message published successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error publishing message: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
