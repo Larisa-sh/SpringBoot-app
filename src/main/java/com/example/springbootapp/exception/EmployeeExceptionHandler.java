@@ -45,7 +45,7 @@ public class EmployeeExceptionHandler {
             ConstraintViolationException exception
     ) {
         final List<Violation> violations = extractConstraintViolations(exception);
-        return new ResponseError(HttpStatus.BAD_REQUEST, violations.toString());
+        return new ResponseError(HttpStatus.BAD_REQUEST, violations);
     }
 
     private List<Violation> extractConstraintViolations(ConstraintViolationException exception) {
@@ -64,7 +64,7 @@ public class EmployeeExceptionHandler {
             MethodArgumentNotValidException exception
     ) {
         final List<Violation> violations = extractFieldErrors(exception);
-        return new ResponseError(HttpStatus.BAD_REQUEST, violations.toString());
+        return new ResponseError(HttpStatus.BAD_REQUEST, violations);
     }
 
     private List<Violation> extractFieldErrors(MethodArgumentNotValidException exception) {
