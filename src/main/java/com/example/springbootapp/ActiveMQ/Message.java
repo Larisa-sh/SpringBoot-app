@@ -2,14 +2,5 @@ package com.example.springbootapp.ActiveMQ;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
-    private final String text;
-
-    public Message(String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
+public record Message(String text) implements Serializable {
 }
