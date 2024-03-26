@@ -44,12 +44,12 @@ public class EmployeeExceptionHandler {
     public ResponseError employeeConstraintViolation(
             ConstraintViolationException exception
     ) {
+        LOGGER.error(exception.getMessage(), exception);
         final List<Violation> violations = extractConstraintViolations(exception);
         return new ResponseError(HttpStatus.BAD_REQUEST, violations);
     }
 
     private List<Violation> extractConstraintViolations(ConstraintViolationException exception) {
-        LOGGER.error(exception.getMessage(), exception);
         return exception.getConstraintViolations().stream()
                 .map(violation -> new Violation(
                         violation.getPropertyPath().toString(),
@@ -63,12 +63,12 @@ public class EmployeeExceptionHandler {
     public ResponseError employeeMethodArgumentNotValid(
             MethodArgumentNotValidException exception
     ) {
+        LOGGER.error(exception.getMessage(), exception);
         final List<Violation> violations = extractFieldErrors(exception);
         return new ResponseError(HttpStatus.BAD_REQUEST, violations);
     }
 
     private List<Violation> extractFieldErrors(MethodArgumentNotValidException exception) {
-        LOGGER.error(exception.getMessage(), exception);
         return exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> new Violation(
                         error.getField(),
