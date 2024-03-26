@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: change-column-type
+      author: Larisa Shkvarko
+      changes:
+        - modifyDataType:
+            tableName: employee
+            columnName: gender
+            newDataType: varchar(6)

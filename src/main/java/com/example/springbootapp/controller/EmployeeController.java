@@ -2,18 +2,22 @@ package com.example.springbootapp.controller;
 
 
 import com.example.springbootapp.dto.EmployeeDTO;
-import com.example.springbootapp.entity.Employee;
 import com.example.springbootapp.service.EmployeeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Validated
 @RestController
 @RequestMapping("/employees")
+@Tag(name = "Employees", description = "Interaction with employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -24,36 +28,49 @@ public class EmployeeController {
     }
 
     @GetMapping
+    @Operation(summary = "Shows a list of all employees")
     public List<EmployeeDTO> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
     @GetMapping("/{employeeId}")
+    @Operation(summary = "Shows an employee by their ID")
     public EmployeeDTO getById(@PathVariable("employeeId")
-                               @Min(value = 1,
-                                       message = "Employee ID can't be less than 1")
+                               @Parameter(description = "Employee's ID", required = true)
+                               @Min(value = 1, message = "Employee ID can't be less than 1")
                                long employeeId) {
+
         return employeeService.getEmployeeById(employeeId);
     }
 
     @PostMapping
-    public Employee saveNewEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+    @Operation(summary = "Saves new employee",
+            description = "To save new employee you must provide unique First and Last name")
+    public EmployeeDTO saveNewEmployee(@RequestBody
+                                       @Parameter(description = "Employee's DTO", required = true)
+                                       @Valid
+                                       EmployeeDTO employeeDTO) {
         return employeeService.saveNewEmployee(employeeDTO);
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable("employeeId")
-                                   @Min(value = 1,
-                                           message = "Employee ID can't be less than 1")
-                                   long employeeId,
-                                   @Valid
-                                   @RequestBody
-                                   EmployeeDTO employeeDTO) {
+    @Operation(summary = "Updates an employee by their ID",
+            description = "To update employee you must provide the same First and Last name as this employee has")
+    public EmployeeDTO updateEmployee(@PathVariable("employeeId")
+                                      @Parameter(description = "Employee's ID", required = true)
+                                      @Min(value = 1, message = "Employee ID can't be less than 1")
+                                      long employeeId,
+                                      @RequestBody
+                                      @Parameter(description = "Employee's DTO")
+                                      @Valid
+                                      EmployeeDTO employeeDTO) {
         return employeeService.updateEmployee(employeeId, employeeDTO);
     }
 
     @DeleteMapping("/{employeeId}")
+    @Operation(summary = "Deletes an employee by their ID")
     public void deleteEmployee(@PathVariable("employeeId")
+                               @Parameter(description = "Employee's ID", required = true)
                                @Min(value = 1,
                                        message = "Employee ID can't be less than 1")
                                long employeeId) {
