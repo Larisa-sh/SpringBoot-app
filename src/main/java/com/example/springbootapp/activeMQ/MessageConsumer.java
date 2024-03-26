@@ -1,4 +1,4 @@
-package com.example.springbootapp.ActiveMQ;
+package com.example.springbootapp.activeMQ;
 
 import com.example.springbootapp.dto.EmployeeDTO;
 import com.example.springbootapp.service.EmployeeService;

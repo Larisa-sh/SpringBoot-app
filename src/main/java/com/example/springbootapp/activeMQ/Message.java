@@ -1,4 +1,4 @@
-package com.example.springbootapp.ActiveMQ;
+package com.example.springbootapp.activeMQ;
 
 import java.io.Serializable;
 
